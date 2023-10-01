@@ -29,6 +29,7 @@ from PIL import Image
 import os
 import glob
 import pandas as pd
+import cv2
 from tqdm import tqdm
 import torch
 import argparse
@@ -54,6 +55,7 @@ def main():
 
     subject_of_interest = parser.parse_args().subject
     input_folder_path = parser.parse_args().input_folder_path
+    topK = parser.parse_args().topK
 
     # check if input folder of images exist:
     if not os.path.exists(input_folder_path):
@@ -138,18 +140,16 @@ def main():
 
     # Finally, filter the images
     greyscale_threshold = 10000 # Increase this threshold if you want more colorful images
-    print(f"Total number of images: {len(results_df)}"")
+    print(f"Total number of images: {len(results_df)}")
     print(f"Based on VQA, # of images that contain {subject_of_interest}: {len(results_df[results_df['txt2img_faith']==1])}")
     print(f"Based on VQA, # of images that have limb distortion: {len(results_df[results_df['limb_distorted']==1])}")
-    print(f"Based on VQA, # of images that are fake: {len(results_df[results_df['image_fake']==1])}")
-    print(f"# of images that are # of unique colors that exceed greyscale_threshold = {greyscale_threshold}:
+    print(f"# of images that are # of unique colors that exceed greyscale_threshold = {greyscale_threshold}: \
             {len(results_df[results_df['unique_colors']>=greyscale_threshold])}")
 
     # Filter the images based on the VQA questions
     filtered_df = results_df.copy()
     filtered_df = filtered_df[filtered_df['txt2img_faith']==1]
     filtered_df = filtered_df[filtered_df['limb_distorted']==0]
-    filtered_df = filtered_df[filtered_df['image_fake']==0]
     filtered_df = filtered_df[filtered_df['unique_colors']>=greyscale_threshold]
 
     # Finally, take the topK images based on the realism score
