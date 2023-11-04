@@ -19,7 +19,8 @@
     Example usage:
         python vqa_filtering.py
         --subject 'firefighter' # This is the subject of interest that you want to depict
-        --input_folder_path 'datasets/base_images' # This is the folder path containing the base images
+        --input_folder_path 'datasets/base_images' # Folder path containing the base images
+        --save_folder_path 'datasets/filter_results' # Folder path where you save your filtering results CSV and filtered images
         --topK 10 # This is the number of base images to keep after filtering (based on overall realism score)
 '''
 
@@ -51,16 +52,25 @@ def main():
     parser = argparse.ArgumentParser(description='Choose')
     parser.add_argument('--subject', type=str, default="firefighter", help='subject of interest')
     parser.add_argument('--input_folder_path', type=str, help='input folder path containing all the images')
+    parser.add_argument('--save_folder_path', type=str, help='folder path where you want to save your CSV results and filtered images')
     parser.add_argument('--topK', type=int, default=10, help='topK base images to keep based on VQA overall realism score')
 
     subject_of_interest = parser.parse_args().subject
     input_folder_path = parser.parse_args().input_folder_path
+    save_folder_path = parser.parse_args().save_folder_path
     topK = parser.parse_args().topK
 
     # check if input folder of images exist:
     if not os.path.exists(input_folder_path):
         print(f"Folder path {input_folder_path} does not exist")
         exit()
+
+    # Check if save folder exists. if not, create it
+    if not os.path.exists(save_folder_path):
+        os.makedirs(save_folder_path)
+    # Create folder for filtered images
+    if not os.path.exists(os.path.join(save_folder_path, "filtered_images")):
+        os.makedirs(os.path.join(save_folder_path, "filtered_images"))
     
     # Generate a CSV of image paths for images in the input_folder_path
     folder_path = os.path.join(input_folder_path, "image_paths.csv")
@@ -136,7 +146,7 @@ def main():
                                "realism_score": realism_score,
                                "unique_colors": unique_color_list})
     print(len(results_df))
-    results_df.to_csv(os.path.join(input_folder_path, "vqa_results.csv"))
+    results_df.to_csv(os.path.join(save_folder_path, "vqa_results.csv"))
 
     # Finally, filter the images
     greyscale_threshold = 10000 # Increase this threshold if you want more colorful images
@@ -155,7 +165,16 @@ def main():
     # Finally, take the topK images based on the realism score
     filtered_df = filtered_df.sort_values(by=['realism_score'], ascending=False)
     filtered_df = filtered_df.head(topK)
-    filtered_df.to_csv(os.path.join(input_folder_path, "filtered_images.csv"))
+    filtered_df.to_csv(os.path.join(save_folder_path, "filtered_images.csv"))
+    filtered_df = pd.read_csv(os.path.join(save_folder_path, "filtered_images.csv"))
+    
+    # Save all the images in the filtered_df
+    for idx, row in filtered_df.iterrows():
+        img_path = row['img_path']
+        img = Image.open(img_path)
+        index = img_path.split("/")[-1].split(".")[0].split("_")[0]
+        img.save(os.path.join(os.path.join(save_folder_path, "filtered_images"), f"{index}_mask.jpg"))
+
     print("VQA AND GREYSCALE FILTERING COMPLETE")
 
 main()

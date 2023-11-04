@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate base images with Stable Diffusion XL')
     parser.add_argument('--prompt', type=str, default="A photo of the face of a firefighter", help='prompt to use')
     parser.add_argument('--batch_size', type=int, default=4, help='batch size')
-    parser.add_argument('--num_batches', type=int, default=250, help='number of batches')
+    parser.add_argument('--num_batches', type=int, default=100 , help='number of batches')
     parser.add_argument('--output_folder', type=str, default='datasets/base_images', help='output folder')
 
     prompt = parser.parse_args().prompt
