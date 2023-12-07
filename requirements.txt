@@ -1,0 +1,10 @@
+numpy
+pandas
+Pillow
+torch
+transformers
+git+https://github.com/openai/CLIP.git
+open-clip-torch
+scipy
+scikit-learn
+statsmodels
