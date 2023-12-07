@@ -54,7 +54,7 @@ def embed_text(occupations, true_occupation, model_type):
 if __name__ == "__main__":
 
     """
-    Run this after running main.py to output a csv file with a table consisting of the following information:
+    Run this to output a csv file with a table consisting of the following information:
     index,img_path,labels,probs,occupation,race,prompt_index
 
     An example row would look like:
@@ -64,6 +64,8 @@ if __name__ == "__main__":
     `probs`: the softmax probability ordered by the list of labels in the `labels` column
 
     Example: python evaluation/main.py --model_type clip --dataset_csv "datasets/final/SDXL_pilot/image_paths.csv" --output_path "outputs/trials"
+
+    dataset_csv is just a csv file with one column of image file paths you want to include in your evaluation set. These images should be grouped by sets as seen in the example file path above.
     """
 
     parser = argparse.ArgumentParser()
