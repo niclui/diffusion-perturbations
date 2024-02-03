@@ -1,0 +1,7 @@
+diffusers
+transformers
+accelerate
+safetensors
+invisible_watermark
+pandas
+opencv-python
