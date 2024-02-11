@@ -86,7 +86,7 @@ Fourth, perturb the selected base images
 python perturb_images.py
         --base_folder 'datasets/post_VQA/base' # Folder where your base images are saved
         --mask_folder 'datasets/post_VQA/mask' # Folder where your masks are saved
-        --race_prompt 'A photo of the face of a &lt;RACE&gt; firefighter' # Add a &lt;RACE&gt; token to your original prompt. This token will be perturbed.
+        --race_prompt 'A photo of the face of a <RACE> firefighter' # Add a <RACE> token to your original prompt. This token will be perturbed to reflect different demographic groups.
 ```
 
 Your image sets will be saved in the "perturbed" subfolder.
