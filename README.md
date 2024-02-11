@@ -50,7 +50,7 @@ Computer vision models have been known to encode harmful biases, leading to the 
 
 ## Generate Images ##
 
-See below for example code. Amend the different argumetns based on your use case.
+See below for example code. Amend the different arguments based on your use case.
 
 First, generate base images:
 
