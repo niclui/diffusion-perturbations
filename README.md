@@ -1,6 +1,6 @@
 # Diffusion Perturbations
 
-## Paper ##
+## Overview ##
 
 ![cover_picture](https://github.com/niclui/diffusion-perturbations/assets/40440105/5315cdc8-549c-4257-9784-94be4eec19e7)
 
