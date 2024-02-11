@@ -2,12 +2,13 @@
     This script generates base images for a given prompt using a diffusion model.
 
     Example usage:
-        python base_image_generation.py
-        --prompt 'A photo of the face of a firefighter'
-        --batch_size 4
-        --num_batches 250
-        --output_folder 'datasets/base_images'
+    python data_generation/base_image_generation.py
+        --prompt 'A photo of the face of a firefighter' # Prompt here
+        --batch_size 4 # Batch size
+        --num_batches 3 # Number of batches
+        --output_folder 'datasets/pre_VQA' # Folder where the base images will be stored
 '''
+
 import numpy as np
 import torch
 import argparse
@@ -22,15 +23,17 @@ pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
 
 def main():
     parser = argparse.ArgumentParser(description='Generate base images with Stable Diffusion XL')
-    parser.add_argument('--prompt', type=str, default="A photo of the face of a firefighter", help='prompt to use')
+    parser.add_argument('--prompt', type=str, help='prompt to use')
     parser.add_argument('--batch_size', type=int, default=4, help='batch size')
-    parser.add_argument('--num_batches', type=int, default=100 , help='number of batches')
-    parser.add_argument('--output_folder', type=str, default='datasets/base_images', help='output folder')
+    parser.add_argument('--num_batches', type=int, help='number of batches')
+    parser.add_argument('--output_folder', type=str, help='output folder')
 
     prompt = parser.parse_args().prompt
     batch_size = parser.parse_args().batch_size
     num_batches = parser.parse_args().num_batches
-    print(f"Prompt: {prompt}, Batch Size: {batch_size}, Total Images Generating: {batch_size * num_batches}")
+    total_images = batch_size * num_batches
+ 
+    print(f"Prompt: {prompt}, Batch Size: {batch_size}, Total Images Generating: {total_images}")
 
     # Create folder path
     fp = parser.parse_args().output_folder
