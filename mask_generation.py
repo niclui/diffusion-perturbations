@@ -4,8 +4,10 @@
     First, we use GroundingDINO to generate bounding boxes for the subject of interest using a "person" prompt.
     Second, we use Segment Anything to generate masks for the subject of interest using the bounding boxes from GroundingDINO.
 
-    python data_generation/mask_generation.py --mask_folder 'datasets/filter_results' --img_dir 'datasets/filter_results/filtered_images'
-    
+    python mask_generation.py
+        --base_folder 'datasets/post_VQA/base' # Folder where you have your filtered base images saved
+        --mask_folder 'datasets/post_VQA/mask' # Folder where you will save your masks  
+              
     This code is adapted from Grounded-Segment-Anything by IDEA-Research:
     https://github.com/IDEA-Research/Grounded-Segment-Anything
 
@@ -64,12 +66,12 @@ def segment(sam_predictor: SamPredictor, image: np.ndarray, xyxy: np.ndarray) ->
 def main():
     parser = argparse.ArgumentParser(description='Mask Generation')
     parser.add_argument('--mask_folder', type=str, help='folder where you want to save your masks')
-    parser.add_argument('--img_dir', type=str, help='directory of images')
+    parser.add_argument('--base_folder', type=str, help='directory of images')
     MASK_FOLDER = parser.parse_args().mask_folder
-    IMAGES_DIRECTORY = parser.parse_args().img_dir
+    IMAGES_DIRECTORY = parser.parse_args().base_folder
     
-    if not os.path.exists(os.path.join(MASK_FOLDER, "masks")):
-        os.makedirs(os.path.join(MASK_FOLDER, "masks"))
+    if not os.path.exists(MASK_FOLDER):
+        os.makedirs(MASK_FOLDER)
     IMAGES_EXTENSIONS = ['jpg', 'jpeg', 'png']
 
     CLASSES = ['person']
@@ -107,6 +109,6 @@ def main():
         if annotations[image_name].mask.any():
             mask = annotations[image_name].mask[0]
             mask = Image.fromarray(mask)
-            mask.save(os.path.join(MASK_FOLDER, "masks", "mask_" + image_name))
+            mask.save(os.path.join(MASK_FOLDER, "mask_" + image_name))
 
 main()
